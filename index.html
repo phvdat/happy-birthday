@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="volume" onclick="toggleAudio()">
+      <img src="assets/icon/volume.png" alt="volume" />
+    </div>
     <div class="moon">
       <div class="crater1"></div>
       <div class="crater2"></div>
@@ -76,7 +79,7 @@
       </div>
     </div>
     <div id="confettiContainer" class="hidden"></div>
-    <div id="slider"></div>
+    <div id="slider" class="hidden"></div>
     <button id="next"></button>
     <button id="prev"></button>
     <audio

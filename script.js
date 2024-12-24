@@ -24,6 +24,11 @@ function playAudio() {
   audioElement.play();
 }
 
+function toggleAudio() {
+  if (audioElement.paused) audioElement.play();
+  else audioElement.pause();
+}
+
 window.requestAnimFrame = (function () {
   return (
     window.requestAnimationFrame ||
@@ -316,8 +321,8 @@ window.onload = function () {
     if (step === 3) {
     }
     if (step === 2) {
-      audioElement.play();
-      openGift();
+      const slider = document.getElementById('slider');
+      slider.classList.remove('hidden');
       reveal();
       return;
     }
@@ -359,87 +364,83 @@ let images = [];
 fetch(endpoint + '/api/happy-birthday-project/images').then(
   async (response) => {
     images = await response.json();
-  }
-);
+    const confettiContainer = document.getElementById('confettiContainer');
 
-function openGift() {
-  const confettiContainer = document.getElementById('confettiContainer');
+    confettiContainer.classList.remove('hidden');
 
-  confettiContainer.classList.remove('hidden');
+    for (let i = 0; i < 100; i++) {
+      const confetti = document.createElement('div');
+      confetti.classList.add('confetti');
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+      confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+      confettiContainer.appendChild(confetti);
 
-  for (let i = 0; i < 100; i++) {
-    const confetti = document.createElement('div');
-    confetti.classList.add('confetti');
-    confetti.style.left = Math.random() * 100 + 'vw';
-    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
-    confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
-    confettiContainer.appendChild(confetti);
+      setTimeout(() => confettiContainer.classList.add('hidden'), 5000);
+    }
 
-    setTimeout(() => confettiContainer.classList.add('hidden'), 5000);
-  }
+    const slider = document.getElementById('slider');
 
-  const slider = document.getElementById('slider');
-  slider.classList.remove('hidden');
-
-  const items = [];
-  images.forEach((image, index) => {
-    const item = document.createElement('div');
-    item.classList.add('item');
-    item.innerHTML = `<img src="${image}" class="image">`;
-    slider.appendChild(item);
-    items.push(item);
-  });
-
-  let active = 3;
-
-  function loadShow() {
-    let stt = 0;
-    items.forEach((item, index) => {
-      item.style.transition = 'transform 0.5s, opacity 0.5s';
+    const items = [];
+    images.forEach((image, index) => {
+      const item = document.createElement('div');
+      item.classList.add('item');
+      item.innerHTML = `<img src="${image}" class="image">`;
+      slider.appendChild(item);
+      items.push(item);
     });
 
-    items[active].style.transform = `none`;
-    items[active].style.zIndex = 1;
-    items[active].style.filter = 'none';
-    items[active].style.opacity = 1;
+    let active = 3;
 
-    for (let i = 1; i <= Math.floor(items.length / 2); i++) {
-      let nextIndex = (active + i) % items.length;
-      let prevIndex = (active - i + items.length) % items.length;
+    function loadShow() {
+      let stt = 0;
+      items.forEach((item, index) => {
+        item.style.transition = 'transform 1s ease, z-index 0s, opacity 0.5s';
+      });
 
-      items[nextIndex].style.transform = `translateX(${120 * i}px) scale(${
-        1 - 0.2 * i
-      }) perspective(16px) rotateY(-1deg)`;
-      items[nextIndex].style.zIndex = -i;
-      items[nextIndex].style.filter = 'blur(5px)';
-      items[nextIndex].style.opacity = i > 2 ? 0 : 0.6;
+      items[active].style.transform = `none`;
+      items[active].style.zIndex = 1;
+      items[active].style.filter = 'none';
+      items[active].style.opacity = 1;
 
-      items[prevIndex].style.transform = `translateX(${-120 * i}px) scale(${
-        1 - 0.2 * i
-      }) perspective(16px) rotateY(1deg)`;
-      items[prevIndex].style.zIndex = -i;
-      items[prevIndex].style.filter = 'blur(5px)';
-      items[prevIndex].style.opacity = i > 2 ? 0 : 0.6;
+      for (let i = 1; i <= Math.floor(items.length / 2); i++) {
+        let nextIndex = (active + i) % items.length;
+        let prevIndex = (active - i + items.length) % items.length;
+
+        items[nextIndex].style.transform = `translateX(${120 * i}px) scale(${
+          1 - 0.2 * i
+        }) perspective(16px) rotateY(-1deg)`;
+        items[nextIndex].style.zIndex = -i;
+        items[nextIndex].style.filter = 'blur(5px)';
+        items[nextIndex].style.opacity = i > 2 ? 0 : 0.6;
+
+        items[prevIndex].style.transform = `translateX(${-120 * i}px) scale(${
+          1 - 0.2 * i
+        }) perspective(16px) rotateY(1deg)`;
+        items[prevIndex].style.zIndex = -i;
+        items[prevIndex].style.filter = 'blur(5px)';
+        items[prevIndex].style.opacity = i > 2 ? 0 : 0.6;
+      }
     }
-  }
 
-  function nextSlide() {
-    active = (active + 1) % items.length;
+    function nextSlide() {
+      active = (active + 1) % items.length;
+      loadShow();
+    }
+
+    function prevSlide() {
+      active = (active - 1 + items.length) % items.length;
+      loadShow();
+    }
+
+    let next = document.getElementById('next');
+    let prev = document.getElementById('prev');
+
+    next.onclick = nextSlide;
+    prev.onclick = prevSlide;
+
+    setInterval(nextSlide, 2000);
+
     loadShow();
   }
-
-  function prevSlide() {
-    active = (active - 1 + items.length) % items.length;
-    loadShow();
-  }
-
-  let next = document.getElementById('next');
-  let prev = document.getElementById('prev');
-
-  next.onclick = nextSlide;
-  prev.onclick = prevSlide;
-
-  setInterval(nextSlide, 2000);
-
-  loadShow();
-}
+);
