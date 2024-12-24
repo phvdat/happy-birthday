@@ -332,12 +332,6 @@ window.onload = function () {
 
   init();
 };
-let thumbnails = [];
-fetch(endpoint + '/api/happy-birthday-project/thumbnails').then(
-  async (response) => {
-    thumbnails = await response.json();
-  }
-);
 function reveal() {
   document.querySelector('.merrywrap').style.backgroundImage = 'none';
 
