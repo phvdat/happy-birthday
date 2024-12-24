@@ -9,6 +9,21 @@ https://codepen.io/chuongdang/pen/yzpDG
 - moon 
 https://codepen.io/agelber/pen/sjIKp
 */
+
+const endpoint = 'https://empephuongthao.vercel.app';
+// const endpoint = 'http://localhost:3000';
+let audio = [];
+var audioElement = document.getElementById('audio');
+fetch(endpoint + '/api/happy-birthday-project/audio').then(async (response) => {
+  audio = await response.json();
+  console.log('dev', audio[0]);
+  audioElement.src = audio[0];
+});
+
+function playAudio() {
+  audioElement.play();
+}
+
 window.requestAnimFrame = (function () {
   return (
     window.requestAnimationFrame ||
@@ -301,6 +316,7 @@ window.onload = function () {
     if (step === 3) {
     }
     if (step === 2) {
+      audioElement.play();
       openGift();
       reveal();
       return;
@@ -311,7 +327,12 @@ window.onload = function () {
 
   init();
 };
-
+let thumbnails = [];
+fetch(endpoint + '/api/happy-birthday-project/thumbnails').then(
+  async (response) => {
+    thumbnails = await response.json();
+  }
+);
 function reveal() {
   document.querySelector('.merrywrap').style.backgroundImage = 'none';
 
@@ -326,24 +347,20 @@ function reveal() {
     h = 155;
   }
 
-  var ifrm = document.createElement('iframe');
-  ifrm.setAttribute(
-    'src',
-    'https://www.youtube.com/embed/LjhCEhWiKXk?controls=0&loop=1&autoplay=1'
-  );
-  //ifrm.style.width = `${w}px`;
-  //ifrm.style.height = `${h}px`;
-  ifrm.style.border = 'none';
-  document.querySelector('#video').appendChild(ifrm);
+  // var ifrm = document.createElement('iframe');
+  // ifrm.setAttribute('src', thumbnails[0]);
+  // //ifrm.style.width = `${w}px`;
+  // //ifrm.style.height = `${h}px`;
+  // ifrm.style.border = 'none';
+  // document.querySelector('#video').appendChild(ifrm);
 }
 
 let images = [];
-
-fetch(
-  'https://empephuongthao.vercel.app/api/image-for-happy-birtday-project'
-).then(async (response) => {
-  images = await response.json();
-});
+fetch(endpoint + '/api/happy-birthday-project/images').then(
+  async (response) => {
+    images = await response.json();
+  }
+);
 
 function openGift() {
   const confettiContainer = document.getElementById('confettiContainer');
@@ -366,7 +383,6 @@ function openGift() {
 
   const items = [];
   images.forEach((image, index) => {
-    const slider = document.getElementById('slider');
     const item = document.createElement('div');
     item.classList.add('item');
     item.innerHTML = `<img src="${image}" class="image">`;
@@ -374,45 +390,56 @@ function openGift() {
     items.push(item);
   });
 
-  let next = document.getElementById('next');
-  let prev = document.getElementById('prev');
-
   let active = 3;
+
   function loadShow() {
     let stt = 0;
+    items.forEach((item, index) => {
+      item.style.transition = 'transform 0.5s, opacity 0.5s';
+    });
+
     items[active].style.transform = `none`;
     items[active].style.zIndex = 1;
     items[active].style.filter = 'none';
     items[active].style.opacity = 1;
-    for (var i = active + 1; i < items.length; i++) {
-      stt++;
-      items[i].style.transform = `translateX(${120 * stt}px) scale(${
-        1 - 0.2 * stt
+
+    for (let i = 1; i <= Math.floor(items.length / 2); i++) {
+      let nextIndex = (active + i) % items.length;
+      let prevIndex = (active - i + items.length) % items.length;
+
+      items[nextIndex].style.transform = `translateX(${120 * i}px) scale(${
+        1 - 0.2 * i
       }) perspective(16px) rotateY(-1deg)`;
-      items[i].style.zIndex = -stt;
-      items[i].style.filter = 'blur(5px)';
-      items[i].style.opacity = stt > 2 ? 0 : 0.6;
-    }
-    stt = 0;
-    for (var i = active - 1; i >= 0; i--) {
-      stt++;
-      items[i].style.transform = `translateX(${-120 * stt}px) scale(${
-        1 - 0.2 * stt
+      items[nextIndex].style.zIndex = -i;
+      items[nextIndex].style.filter = 'blur(5px)';
+      items[nextIndex].style.opacity = i > 2 ? 0 : 0.6;
+
+      items[prevIndex].style.transform = `translateX(${-120 * i}px) scale(${
+        1 - 0.2 * i
       }) perspective(16px) rotateY(1deg)`;
-      items[i].style.zIndex = -stt;
-      items[i].style.filter = 'blur(5px)';
-      items[i].style.opacity = stt > 2 ? 0 : 0.6;
+      items[prevIndex].style.zIndex = -i;
+      items[prevIndex].style.filter = 'blur(5px)';
+      items[prevIndex].style.opacity = i > 2 ? 0 : 0.6;
     }
   }
-  loadShow();
-  next.onclick = function () {
-    active = active + 1 < items.length ? active + 1 : active;
-    console.log('next');
 
+  function nextSlide() {
+    active = (active + 1) % items.length;
     loadShow();
-  };
-  prev.onclick = function () {
-    active = active - 1 >= 0 ? active - 1 : active;
+  }
+
+  function prevSlide() {
+    active = (active - 1 + items.length) % items.length;
     loadShow();
-  };
+  }
+
+  let next = document.getElementById('next');
+  let prev = document.getElementById('prev');
+
+  next.onclick = nextSlide;
+  prev.onclick = prevSlide;
+
+  setInterval(nextSlide, 2000);
+
+  loadShow();
 }

@@ -467,22 +467,20 @@ div#sea {
 }
 .item {
   position: absolute;
-  width: 200px;
+  width: 300px;
   text-align: justify;
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
   transition: 0.5s;
-  left: calc(50% - 110px);
-  bottom: 250px;
+  left: calc(50% - 160px);
+  bottom: 200px;
 }
 #next,
 #prev {
   position: absolute;
   z-index: 5;
   background-color: transparent;
-  height: 100%;
-  width: 50%;
   border: none;
   font-size: xxx-large;
   font-family: monospace;
