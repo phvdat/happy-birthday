@@ -42,12 +42,12 @@ div#beach {
 }
 div#video {
   position: absolute;
-  right: 243px;
-  bottom: 200px;
+  right: 143px;
+  bottom: 110px;
 }
 div#video iframe {
-  width: 255px;
-  height: 155px;
+  width: 150px;
+  height: 120px;
 }
 #people {
   position: absolute;
@@ -189,7 +189,7 @@ div#sea {
   font-size: 32px;
   display: inline-block;
   opacity: 0;
-  transition: transform 0.5s ease-in, opacity 0.7s;
+  transition: transform 1.2s ease-in, opacity 0.7s;
 }
 .step-1 .giftbox {
   animation: wobble 0.5s linear infinite forwards;
@@ -213,10 +213,10 @@ div#sea {
   opacity: 0;
 }
 .step-2 .giftbox .cover {
-  animation: flyUp 0.8s ease-in forwards;
+  animation: flyUp 1.2s ease-in forwards;
 }
 .step-2 .giftbox .box {
-  animation: flyDown 0.5s ease-in 0.05s forwards;
+  animation: flyDown 0.8s ease-in 0.05s forwards;
 }
 @keyframes wobble {
   25% {
@@ -494,6 +494,67 @@ div#sea {
   left: unset;
   right: 0;
 }
+#next:focus,
+#prev:focus {
+  outline: none;
+  background: 'transparent';
+}
 .image {
   width: 100%;
+}
+
+.balloon {
+  position: absolute;
+  width: 50px;
+  height: 70px;
+  background-color: #ff69b4;
+  border-radius: 50%;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  animation: float 6s ease-in-out infinite;
+}
+
+.balloon:before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background-color: #fff;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+}
+
+.balloon:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+  top: 3px;
+}
+
+.balloon:nth-child(2) {
+  left: 60%;
+  animation-delay: 1s;
+  top: 6px;
+}
+
+.balloon:nth-child(3) {
+  left: 80%;
+  animation-delay: 2s;
+}
+
+.balloon:nth-child(4) {
+  left: 30%;
+  animation-delay: 3s;
+  top: 22px;
 }

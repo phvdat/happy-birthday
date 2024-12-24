@@ -337,6 +337,14 @@ function reveal() {
   document.querySelector('#video').appendChild(ifrm);
 }
 
+let images = [];
+
+fetch(
+  'https://empephuongthao.vercel.app/api/image-for-happy-birtday-project'
+).then(async (response) => {
+  images = await response.json();
+});
+
 function openGift() {
   const confettiContainer = document.getElementById('confettiContainer');
 
@@ -355,16 +363,7 @@ function openGift() {
 
   const slider = document.getElementById('slider');
   slider.classList.remove('hidden');
-  const images = [
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014645931.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014685422.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014719603.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014769935.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014812706.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014895709.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F171450149355210.jpg?alt=media',
-    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F171450149665411.jpg?alt=media',
-  ];
+
   const items = [];
   images.forEach((image, index) => {
     const slider = document.getElementById('slider');
@@ -375,8 +374,6 @@ function openGift() {
     items.push(item);
   });
 
-  // Thêm hình ảnh vào slider
-  // let items = document.querySelectorAll('.slider .item');
   let next = document.getElementById('next');
   let prev = document.getElementById('prev');
 
