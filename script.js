@@ -300,7 +300,8 @@ window.onload = function () {
     stepClass(step);
     if (step === 3) {
     }
-    if (step === 4) {
+    if (step === 2) {
+      openGift();
       reveal();
       return;
     }
@@ -312,7 +313,7 @@ window.onload = function () {
 };
 
 function reveal() {
-  document.querySelector('.merrywrap').style.backgroundColor = 'transparent';
+  document.querySelector('.merrywrap').style.backgroundImage = 'none';
 
   loop();
 
@@ -334,4 +335,87 @@ function reveal() {
   //ifrm.style.height = `${h}px`;
   ifrm.style.border = 'none';
   document.querySelector('#video').appendChild(ifrm);
+}
+
+function openGift() {
+  const confettiContainer = document.getElementById('confettiContainer');
+
+  confettiContainer.classList.remove('hidden');
+
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+    confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+    confettiContainer.appendChild(confetti);
+
+    setTimeout(() => confettiContainer.classList.add('hidden'), 5000);
+  }
+
+  const slider = document.getElementById('slider');
+  slider.classList.remove('hidden');
+  const images = [
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014645931.jpg?alt=media',
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014685422.jpg?alt=media',
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014719603.jpg?alt=media',
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014769935.jpg?alt=media',
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014812706.jpg?alt=media',
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F17145014895709.jpg?alt=media',
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F171450149355210.jpg?alt=media',
+    'https://firebasestorage.googleapis.com/v0/b/pt-ml-td52.appspot.com/o/images%2F171450149665411.jpg?alt=media',
+  ];
+  const items = [];
+  images.forEach((image, index) => {
+    const slider = document.getElementById('slider');
+    const item = document.createElement('div');
+    item.classList.add('item');
+    item.innerHTML = `<img src="${image}" class="image">`;
+    slider.appendChild(item);
+    items.push(item);
+  });
+
+  // Thêm hình ảnh vào slider
+  // let items = document.querySelectorAll('.slider .item');
+  let next = document.getElementById('next');
+  let prev = document.getElementById('prev');
+
+  let active = 3;
+  function loadShow() {
+    let stt = 0;
+    items[active].style.transform = `none`;
+    items[active].style.zIndex = 1;
+    items[active].style.filter = 'none';
+    items[active].style.opacity = 1;
+    for (var i = active + 1; i < items.length; i++) {
+      stt++;
+      items[i].style.transform = `translateX(${120 * stt}px) scale(${
+        1 - 0.2 * stt
+      }) perspective(16px) rotateY(-1deg)`;
+      items[i].style.zIndex = -stt;
+      items[i].style.filter = 'blur(5px)';
+      items[i].style.opacity = stt > 2 ? 0 : 0.6;
+    }
+    stt = 0;
+    for (var i = active - 1; i >= 0; i--) {
+      stt++;
+      items[i].style.transform = `translateX(${-120 * stt}px) scale(${
+        1 - 0.2 * stt
+      }) perspective(16px) rotateY(1deg)`;
+      items[i].style.zIndex = -stt;
+      items[i].style.filter = 'blur(5px)';
+      items[i].style.opacity = stt > 2 ? 0 : 0.6;
+    }
+  }
+  loadShow();
+  next.onclick = function () {
+    active = active + 1 < items.length ? active + 1 : active;
+    console.log('next');
+
+    loadShow();
+  };
+  prev.onclick = function () {
+    active = active - 1 >= 0 ? active - 1 : active;
+    loadShow();
+  };
 }
